@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, X, Check, Trash2, Building2 } from 'lucide-react';
+import { Plus, X, Check, Trash2, Building2, ExternalLink } from 'lucide-react';
 import THEME from '../../lib/theme';
 import { todayISO, uid } from '../../lib/helpers';
 import { TIERS } from '../../lib/constants';
@@ -15,13 +15,13 @@ export default function TargetCompaniesTab({ companies, saveCompanies }) {
   const [adding, setAdding] = useState(false);
   const [filterTier, setFilterTier] = useState('all');
   const [form, setForm] = useState({
-    company: '', role: '', tier: 'tier15', notes: ''
+    company: '', role: '', tier: 'tier15', notes: '', careerUrl: ''
   });
 
   const addCompany = () => {
     if (!form.company.trim()) return;
     saveCompanies([...companies, { id: uid(), ...form, applied: false, referralStatus: 'none', referrerName: '', dateAdded: todayISO() }]);
-    setForm({ company: '', role: '', tier: 'tier15', notes: '' });
+    setForm({ company: '', role: '', tier: 'tier15', notes: '', careerUrl: '' });
     setAdding(false);
   };
 
@@ -70,6 +70,7 @@ export default function TargetCompaniesTab({ companies, saveCompanies }) {
             <Input label="Company" value={form.company} onChange={e => setForm({ ...form, company: e.target.value })} placeholder="Company name" autoFocus />
             <Input label="Role" value={form.role} onChange={e => setForm({ ...form, role: e.target.value })} placeholder="SWE II" />
             <Select label="Tier" value={form.tier} onChange={e => setForm({ ...form, tier: e.target.value })} options={TIERS} />
+            <Input label="Careers URL" value={form.careerUrl} onChange={e => setForm({ ...form, careerUrl: e.target.value })} placeholder="https://careers.company.com" />
             <div className="md:col-span-2">
               <Textarea label="Notes" value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} placeholder="Any notes..." />
             </div>
@@ -116,6 +117,11 @@ export default function TargetCompaniesTab({ companies, saveCompanies }) {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-display text-lg font-semibold" style={{ color: THEME.text }}>{c.company}</span>
+                    {c.careerUrl && (
+                      <a href={c.careerUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-mono font-medium hover-lift" style={{ color: THEME.accent, background: THEME.accentLight, border: `1px solid ${THEME.accent}20` }} title="Careers page">
+                        <ExternalLink size={10} /> Careers
+                      </a>
+                    )}
                     {tier && <span className="text-xs font-mono px-2 py-0.5 rounded-full font-medium" style={{ color: tier.color, background: `${tier.color}12`, border: `1px solid ${tier.color}30` }}>{tier.label}</span>}
                   </div>
                   {c.role && <div className="text-sm" style={{ color: THEME.textDim }}>{c.role}</div>}

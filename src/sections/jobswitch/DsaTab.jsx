@@ -1,9 +1,9 @@
-import React, { useState, useMemo } from 'react';
-import { Flame, Code2, Calendar, AlertCircle, Plus, Trash2 } from 'lucide-react';
+import React, { useState, useMemo, useRef } from 'react';
+import { Flame, Code2, Calendar, AlertCircle, Plus, Trash2, ExternalLink } from 'lucide-react';
 import THEME from '../../lib/theme';
 import { todayISO, formatDate, last7Days, calculateStreak, uid } from '../../lib/helpers';
-import { PATTERNS } from '../../lib/constants';
-import { StatCard, Chip, Input, Select, Button } from '../../components/ui';
+import { PATTERNS, LEETCODE_PROBLEMS } from '../../lib/constants';
+import { StatCard, Chip, Select, Button } from '../../components/ui';
 
 export default function DsaTab({ dsa, saveDsa }) {
   const [form, setForm] = useState({
@@ -12,10 +12,46 @@ export default function DsaTab({ dsa, saveDsa }) {
   });
   const [filterPattern, setFilterPattern] = useState('all');
   const [showRevisitOnly, setShowRevisitOnly] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const inputRef = useRef(null);
+
+  const handleProblemChange = (value) => {
+    setForm({ ...form, problem: value });
+    if (value.length >= 2) {
+      const query = value.toLowerCase();
+      const matches = LEETCODE_PROBLEMS.filter(p =>
+        p.name.toLowerCase().includes(query)
+      ).slice(0, 8);
+      setSuggestions(matches);
+      setShowSuggestions(matches.length > 0);
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+  };
+
+  const selectSuggestion = (prob) => {
+    setForm({
+      ...form,
+      problem: prob.name,
+      difficulty: prob.difficulty,
+      pattern: prob.pattern,
+      link: prob.link,
+    });
+    setSuggestions([]);
+    setShowSuggestions(false);
+  };
 
   const add = () => {
     if (!form.problem.trim()) return;
-    saveDsa([{ id: uid(), ...form }, ...dsa]);
+    // If no link set and problem matches a known one, auto-attach
+    let link = form.link;
+    if (!link) {
+      const match = LEETCODE_PROBLEMS.find(p => p.name.toLowerCase() === form.problem.toLowerCase());
+      if (match) link = match.link;
+    }
+    saveDsa([{ id: uid(), ...form, link }, ...dsa]);
     setForm({ ...form, problem: '', link: '', timeMinutes: 25, needsRevisit: false });
   };
 
@@ -64,8 +100,51 @@ export default function DsaTab({ dsa, saveDsa }) {
           Log today's problem
         </div>
         <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
-          <div className="md:col-span-4">
-            <Input label="Problem" value={form.problem} onChange={e => setForm({ ...form, problem: e.target.value })} placeholder="Two Sum" />
+          {/* Problem input with autocomplete */}
+          <div className="md:col-span-4 relative">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs uppercase tracking-wider font-mono font-medium" style={{ color: THEME.textMuted }}>Problem</label>
+              <input
+                ref={inputRef}
+                value={form.problem}
+                onChange={e => handleProblemChange(e.target.value)}
+                onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true); }}
+                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                placeholder="Search or type problem name..."
+                className="px-3 py-2.5 rounded-xl text-sm outline-none transition-all"
+                style={{ background: THEME.surfaceHi, border: `1.5px solid ${showSuggestions ? THEME.accent : THEME.border}`, color: THEME.text }}
+              />
+            </div>
+            {/* Suggestions dropdown */}
+            {showSuggestions && (
+              <div
+                className="absolute z-20 left-0 right-0 mt-1 rounded-xl overflow-hidden"
+                style={{ background: THEME.surface, border: `1.5px solid ${THEME.border}`, boxShadow: '0 8px 24px rgba(0,0,0,0.08)', maxHeight: '280px', overflowY: 'auto' }}
+              >
+                {suggestions.map((prob, i) => {
+                  const diffColor = prob.difficulty === 'Easy' ? THEME.success : prob.difficulty === 'Medium' ? THEME.warning : THEME.danger;
+                  return (
+                    <button
+                      key={i}
+                      onMouseDown={() => selectSuggestion(prob)}
+                      className="w-full px-3 py-2.5 text-left flex items-center gap-2 transition-all"
+                      style={{ borderBottom: `1px solid ${THEME.border}` }}
+                      onMouseEnter={e => e.target.style.background = THEME.surfaceHi}
+                      onMouseLeave={e => e.target.style.background = 'transparent'}
+                    >
+                      <span className="text-sm font-medium flex-1" style={{ color: THEME.text }}>{prob.name}</span>
+                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full" style={{ color: diffColor, background: `${diffColor}12`, border: `1px solid ${diffColor}30` }}>{prob.difficulty}</span>
+                      <span className="text-[10px] font-mono" style={{ color: THEME.textMuted }}>{prob.pattern}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+            {form.link && (
+              <a href={form.link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 mt-1 text-xs font-mono hover-lift" style={{ color: THEME.accent }}>
+                <ExternalLink size={10} /> LeetCode
+              </a>
+            )}
           </div>
           <div className="md:col-span-2">
             <Select label="Difficulty" value={form.difficulty} onChange={e => setForm({ ...form, difficulty: e.target.value })} options={['Easy', 'Medium', 'Hard']} />
@@ -74,7 +153,16 @@ export default function DsaTab({ dsa, saveDsa }) {
             <Select label="Pattern" value={form.pattern} onChange={e => setForm({ ...form, pattern: e.target.value })} options={PATTERNS} />
           </div>
           <div className="md:col-span-2">
-            <Input label="Min" type="number" value={form.timeMinutes} onChange={e => setForm({ ...form, timeMinutes: parseInt(e.target.value) || 0 })} />
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs uppercase tracking-wider font-mono font-medium" style={{ color: THEME.textMuted }}>Min</label>
+              <input
+                type="number"
+                value={form.timeMinutes}
+                onChange={e => setForm({ ...form, timeMinutes: parseInt(e.target.value) || 0 })}
+                className="px-3 py-2.5 rounded-xl text-sm outline-none"
+                style={{ background: THEME.surfaceHi, border: `1.5px solid ${THEME.border}`, color: THEME.text }}
+              />
+            </div>
           </div>
           <div className="md:col-span-1 flex items-end">
             <Button onClick={add}><Plus size={16} /></Button>
@@ -137,7 +225,13 @@ export default function DsaTab({ dsa, saveDsa }) {
             <div key={e.id} className="p-4 rounded-xl flex items-center gap-3" style={{ background: THEME.surface, border: `1.5px solid ${THEME.border}`, borderLeftWidth: '4px', borderLeftColor: e.needsRevisit ? THEME.warning : diffColor, boxShadow: '0 1px 2px rgba(0,0,0,0.03)' }}>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-sm font-semibold" style={{ color: THEME.text }}>{e.problem}</span>
+                  {e.link ? (
+                    <a href={e.link} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold hover-lift flex items-center gap-1" style={{ color: THEME.accent }}>
+                      {e.problem} <ExternalLink size={11} />
+                    </a>
+                  ) : (
+                    <span className="text-sm font-semibold" style={{ color: THEME.text }}>{e.problem}</span>
+                  )}
                   <span className="text-xs font-mono px-2 py-0.5 rounded-full font-medium" style={{ color: diffColor, background: `${diffColor}12`, border: `1px solid ${diffColor}30` }}>{e.difficulty}</span>
                   <span className="text-xs font-mono" style={{ color: THEME.textMuted }}>{e.pattern}</span>
                 </div>

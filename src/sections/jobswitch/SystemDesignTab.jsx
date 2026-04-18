@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BookOpen, Check, ChevronDown, ChevronUp } from 'lucide-react';
+import { BookOpen, Check, ChevronDown, ChevronUp, Play, ExternalLink } from 'lucide-react';
 import THEME from '../../lib/theme';
 import { todayISO, formatDate } from '../../lib/helpers';
 import { Textarea } from '../../components/ui';
@@ -77,16 +77,40 @@ export default function SystemDesignTab({ systemDesign, saveSystemDesign }) {
                     <div className="text-xs font-mono mt-1" style={{ color: THEME.success }}>Completed {formatDate(ch.dateCompleted)}</div>
                   )}
                 </div>
+                {ch.videoUrl && (
+                  <a
+                    href={ch.videoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={e => e.stopPropagation()}
+                    className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-mono font-medium transition-all hover-lift flex-shrink-0"
+                    style={{ background: '#FEF2F2', color: '#EF4444', border: '1px solid #EF444420' }}
+                    title="Watch video"
+                  >
+                    <Play size={12} /> Video
+                  </a>
+                )}
                 {expanded ? <ChevronUp size={16} style={{ color: THEME.textMuted }} /> : <ChevronDown size={16} style={{ color: THEME.textMuted }} />}
               </div>
               {expanded && (
-                <div className="px-4 pb-4 pt-0">
+                <div className="px-4 pb-4 pt-0 flex flex-col gap-3">
                   <Textarea
                     label="Notes"
                     value={ch.notes}
                     onChange={e => updateNotes(ch.id, e.target.value)}
                     placeholder="Key takeaways, tricky parts, links..."
                   />
+                  {ch.videoUrl && (
+                    <a
+                      href={ch.videoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-xs font-mono hover-lift"
+                      style={{ color: THEME.accent }}
+                    >
+                      <ExternalLink size={12} /> Open video lesson
+                    </a>
+                  )}
                 </div>
               )}
             </div>
