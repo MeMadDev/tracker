@@ -103,7 +103,7 @@ export default function DsaTab({ dsa, saveDsa }) {
                 <div key={pattern} className="flex items-center gap-3">
                   <div className="text-xs font-mono w-24 flex-shrink-0 font-medium" style={{ color: THEME.textDim }}>{pattern}</div>
                   <div className="flex-1 h-6 rounded-lg overflow-hidden" style={{ background: THEME.surfaceHi }}>
-                    <div className="h-full rounded-lg" style={{ width: `${(count / max) * 100}%`, background: `linear-gradient(90deg, ${THEME.gradient1}, ${THEME.gradient2})` }} />
+                    <div className="h-full rounded-lg" style={{ width: `${(count / max) * 100}%`, background: THEME.accent }} />
                   </div>
                   <div className="text-xs font-mono w-6 text-right font-semibold" style={{ color: THEME.text }}>{count}</div>
                 </div>

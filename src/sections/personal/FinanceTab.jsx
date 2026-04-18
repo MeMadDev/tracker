@@ -97,7 +97,7 @@ export default function FinanceTab({ transactions, saveTransactions, balances, s
       </div>
 
       {/* Total */}
-      <div className="p-5 rounded-2xl" style={{ background: `linear-gradient(135deg, ${THEME.accentLight}, #FFF0F5)`, border: `1.5px solid ${THEME.accent}20` }}>
+      <div className="p-5 rounded-2xl" style={{ background: THEME.accentLight, border: `1.5px solid ${THEME.accent}15` }}>
         <div className="text-xs uppercase tracking-widest font-mono mb-1" style={{ color: THEME.textMuted }}>Total Balance</div>
         <div className="font-display text-4xl font-bold" style={{ color: totalBalance >= 0 ? THEME.accent : THEME.danger }}>
           ₹{Math.abs(totalBalance).toLocaleString('en-IN')}
@@ -117,7 +117,7 @@ export default function FinanceTab({ transactions, saveTransactions, balances, s
                 className="w-full rounded-t-lg transition-all"
                 style={{
                   height: d.amount > 0 ? `${Math.max(8, (d.amount / maxDaily) * 60)}px` : '4px',
-                  background: d.amount > 0 ? `linear-gradient(180deg, ${THEME.gradient2}, ${THEME.gradient1})` : THEME.surfaceHi,
+                  background: d.amount > 0 ? THEME.accent : THEME.surfaceHi,
                 }}
               />
               <div className="text-[10px] font-mono" style={{ color: THEME.textMuted }}>{new Date(d.date).getDate()}</div>

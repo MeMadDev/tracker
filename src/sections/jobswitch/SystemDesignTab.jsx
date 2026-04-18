@@ -30,7 +30,7 @@ export default function SystemDesignTab({ systemDesign, saveSystemDesign }) {
       </div>
 
       {/* Progress */}
-      <div className="p-6 rounded-2xl" style={{ background: `linear-gradient(135deg, ${THEME.gradient1}, ${THEME.gradient2})`, boxShadow: '0 4px 24px rgba(108, 99, 255, 0.2)' }}>
+      <div className="p-6 rounded-2xl" style={{ background: `linear-gradient(135deg, ${THEME.gradient1}, ${THEME.gradient2})`, boxShadow: '0 4px 16px rgba(91, 141, 239, 0.12)' }}>
         <div className="flex items-baseline gap-3 mb-3">
           <span className="font-display text-5xl font-bold" style={{ color: '#fff' }}>{completed}</span>
           <span className="font-display text-xl" style={{ color: 'rgba(255,255,255,0.7)' }}>/ {total} chapters</span>

@@ -51,7 +51,7 @@ export default function GymTab({ gym, saveGym }) {
                 title={d.type || formatDate(d.date)}
                 className="w-full aspect-square rounded-xl flex items-center justify-center text-xs font-mono font-semibold"
                 style={{
-                  background: d.done ? `linear-gradient(135deg, ${THEME.gradient1}, ${THEME.gradient2})` : THEME.surfaceHi,
+                  background: d.done ? THEME.accent : THEME.surfaceHi,
                   color: d.done ? '#fff' : THEME.textMuted,
                   outline: d.isToday ? `2px solid ${THEME.accent}` : 'none',
                   outlineOffset: '2px',

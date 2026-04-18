@@ -47,8 +47,8 @@ export default function Dashboard({ applications, dsa, questions, systemDesign, 
       <section
         className="p-8 rounded-3xl relative overflow-hidden"
         style={{
-          background: `linear-gradient(135deg, ${THEME.gradient1}, ${THEME.gradient2}, ${THEME.gradient3})`,
-          boxShadow: '0 4px 24px rgba(108, 99, 255, 0.2)',
+          background: `linear-gradient(135deg, ${THEME.gradient1}, ${THEME.gradient2})`,
+          boxShadow: '0 4px 20px rgba(91, 141, 239, 0.15)',
         }}
       >
         <div className="flex items-center justify-between flex-wrap gap-6">
@@ -114,7 +114,7 @@ export default function Dashboard({ applications, dsa, questions, systemDesign, 
           </div>
           <div className="font-display text-2xl font-bold" style={{ color: THEME.accent }}>{sdCompleted}/{sdTotal}</div>
           <div className="h-2 rounded-full mt-2 overflow-hidden" style={{ background: THEME.surfaceHi }}>
-            <div className="h-full rounded-full" style={{ width: sdTotal ? `${(sdCompleted / sdTotal) * 100}%` : '0%', background: `linear-gradient(90deg, ${THEME.gradient1}, ${THEME.gradient2})` }} />
+            <div className="h-full rounded-full" style={{ width: sdTotal ? `${(sdCompleted / sdTotal) * 100}%` : '0%', background: THEME.accent }} />
           </div>
         </div>
         <div className="p-5 rounded-2xl" style={{ background: THEME.surface, border: `1.5px solid ${THEME.border}`, boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
@@ -173,7 +173,7 @@ export default function Dashboard({ applications, dsa, questions, systemDesign, 
                       width: `${pct}%`,
                       background: completed
                         ? `linear-gradient(90deg, ${THEME.success}, #34D399)`
-                        : `linear-gradient(90deg, ${THEME.gradient1}, ${THEME.gradient2})`,
+                        : THEME.accent,
                     }}
                   />
                 </div>
@@ -206,7 +206,7 @@ export default function Dashboard({ applications, dsa, questions, systemDesign, 
       )}
 
       {/* Motivational reminder */}
-      <section className="p-6 rounded-2xl" style={{ background: `linear-gradient(135deg, ${THEME.accentLight}, #FFF0F5)`, border: `1.5px solid ${THEME.accent}20` }}>
+      <section className="p-6 rounded-2xl" style={{ background: THEME.accentLight, border: `1.5px solid ${THEME.accent}15` }}>
         <div className="flex gap-3 items-start">
           <Zap size={20} style={{ color: THEME.accent, flexShrink: 0, marginTop: 2 }} />
           <div>

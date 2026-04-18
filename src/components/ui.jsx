@@ -127,10 +127,10 @@ export function Textarea({ label, ...props }) {
 export function Button({ children, onClick, variant = 'primary', ...props }) {
   const styles = {
     primary: {
-      background: `linear-gradient(135deg, ${THEME.gradient1}, ${THEME.gradient2})`,
+      background: THEME.accent,
       color: '#fff',
       border: 'none',
-      boxShadow: '0 2px 8px rgba(108, 99, 255, 0.25)',
+      boxShadow: '0 2px 8px rgba(91, 141, 239, 0.2)',
     },
     secondary: {
       background: THEME.surfaceHi,

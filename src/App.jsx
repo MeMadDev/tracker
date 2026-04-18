@@ -107,7 +107,7 @@ export default function App() {
           <div className="py-3 flex items-center justify-between flex-wrap gap-3">
             <div>
               <div className="font-display text-xl font-semibold leading-none" style={{ color: THEME.text }}>
-                Devansh <span style={{ background: `linear-gradient(135deg, ${THEME.gradient1}, ${THEME.gradient2})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontStyle: 'italic' }}>/ tracker</span>
+                Devansh <span style={{ color: THEME.accent, fontStyle: 'italic' }}>/ tracker</span>
               </div>
               <div className="text-xs font-mono mt-1 font-medium" style={{ color: THEME.textMuted, letterSpacing: '0.1em' }}>
                 12-WEEK PLAN · WEEK {Math.max(1, Math.min(12, Math.ceil((new Date() - new Date('2026-04-18')) / (7 * 86400000)) || 1))} · DISCIPLINE MODE
@@ -125,9 +125,9 @@ export default function App() {
                     onClick={() => setSection(s.key)}
                     className="px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all"
                     style={{
-                      background: active ? `linear-gradient(135deg, ${THEME.gradient1}, ${THEME.gradient2})` : 'transparent',
+                      background: active ? THEME.accent : 'transparent',
                       color: active ? '#fff' : THEME.textDim,
-                      boxShadow: active ? '0 2px 8px rgba(108, 99, 255, 0.25)' : 'none',
+                      boxShadow: active ? '0 2px 6px rgba(91, 141, 239, 0.15)' : 'none',
                     }}
                   >
                     <Icon size={13} />
