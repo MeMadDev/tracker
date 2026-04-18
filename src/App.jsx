@@ -62,12 +62,32 @@ export default function App() {
   // Notes data
   const [notebooks, saveNotebooks, nbLoaded] = useStoredArray('tracker:notebooks');
 
-  // Pre-seed defaults
+  // Pre-seed defaults + merge new fields into existing data
   useEffect(() => {
-    if (sdLoaded && systemDesign.length === 0) saveSystemDesign(DEFAULT_SYSTEM_DESIGN_CHAPTERS);
+    if (!sdLoaded) return;
+    if (systemDesign.length === 0) {
+      saveSystemDesign(DEFAULT_SYSTEM_DESIGN_CHAPTERS);
+    } else {
+      // Merge new fields (videoUrl) into existing entries
+      const defaults = Object.fromEntries(DEFAULT_SYSTEM_DESIGN_CHAPTERS.map(c => [c.id, c]));
+      const needsUpdate = systemDesign.some(c => defaults[c.id] && !c.videoUrl && defaults[c.id].videoUrl);
+      if (needsUpdate) {
+        saveSystemDesign(systemDesign.map(c => defaults[c.id] ? { ...defaults[c.id], ...c, videoUrl: defaults[c.id].videoUrl } : c));
+      }
+    }
   }, [sdLoaded]);
   useEffect(() => {
-    if (compLoaded && companies.length === 0) saveCompanies(DEFAULT_TARGET_COMPANIES);
+    if (!compLoaded) return;
+    if (companies.length === 0) {
+      saveCompanies(DEFAULT_TARGET_COMPANIES);
+    } else {
+      // Merge new fields (careerUrl) into existing entries
+      const defaults = Object.fromEntries(DEFAULT_TARGET_COMPANIES.map(c => [c.id, c]));
+      const needsUpdate = companies.some(c => defaults[c.id] && !c.careerUrl && defaults[c.id].careerUrl);
+      if (needsUpdate) {
+        saveCompanies(companies.map(c => defaults[c.id] ? { ...c, careerUrl: defaults[c.id].careerUrl } : c));
+      }
+    }
   }, [compLoaded]);
   useEffect(() => {
     if (acLoaded && arogyacare.length === 0) saveArogyacare(DEFAULT_AROGYACARE_TASKS);
