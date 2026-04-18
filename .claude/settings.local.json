@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mv temp-setup/package.json .)",
+      "Bash(mv temp-setup/vite.config.js .)",
+      "Bash(mv temp-setup/eslint.config.js .)",
+      "Bash(mkdir -p src public)",
+      "Bash(mv temp-setup/index.html .)",
+      "Bash(cd:*)",
+      "Bash(npm install:*)"
+    ]
+  }
+}
