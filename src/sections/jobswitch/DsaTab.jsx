@@ -168,6 +168,20 @@ export default function DsaTab({ dsa, saveDsa }) {
             <Button onClick={add}><Plus size={16} /></Button>
           </div>
         </div>
+        <div className="mt-3">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs uppercase tracking-wider font-mono font-medium" style={{ color: THEME.textMuted }}>Link (optional)</label>
+            <input
+              value={form.link}
+              onChange={e => setForm({ ...form, link: e.target.value })}
+              placeholder="https://leetcode.com/problems/..."
+              className="px-3 py-2 rounded-xl text-sm outline-none transition-all"
+              style={{ background: THEME.surfaceHi, border: `1.5px solid ${THEME.border}`, color: THEME.text }}
+              onFocus={e => e.target.style.borderColor = THEME.accent}
+              onBlur={e => e.target.style.borderColor = THEME.border}
+            />
+          </div>
+        </div>
         <div className="flex gap-4 mt-4 text-xs font-mono" style={{ color: THEME.textDim }}>
           <label className="flex items-center gap-2 cursor-pointer">
             <input type="checkbox" checked={form.solved} onChange={e => setForm({ ...form, solved: e.target.checked })} />
